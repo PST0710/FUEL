@@ -184,3 +184,75 @@ Lastly, you can use this file for exploration, as mentioned [here](#exploring-di
 
 ## Acknowledgements
   We use **NLopt** for non-linear optimization and use **LKH** for travelling salesman problem.
+
+
+
+## Real UAV Exp
+
+### FUEL实机运行指令
+#### livox driver
+```
+source FAST_LIO2/fastlio2/devel/setup.bash 
+roslaunch livox_ros_driver2 msg_MID360.launch 
+```
+
+#### fastlio2  and odometry remap to vision_pose
+```
+source FAST_LIO2/fastlio2/devel/setup.bash 
+roslaunch fast_lio mapping_mid360.launch
+```
+
+#### px4  mavros for imu 
+```
+roslaunch mavros px4.launch
+```
+
+#### realsense d435i camera 
+```
+source realsense_ws/devel/setup.sh  
+roslaunch realsense2_camera rs_camera.launch
+```
+
+#### px4ctrl  node
+```
+roslaunch px4ctrl run_ctrl.launch
+```
+
+#### fuel 
+```
+source catkin_fuel_ws/devel/setup.bash
+roslaunch exploration_manager exploration.launch
+```
+
+#### ego_swarm 
+```
+source catkin_ego_swarm_ws/devel/setup.sh 
+roslaunch ego_planner run_in_exp.launch
+```
+
+#### if use lidar build the map (choose)， if use camera ,not run this line （from camera_init to world）
+```
+roslaunch ego_planner mid360_to_octomap.launch 
+```
+
+####  take off 
+```
+cd px4ctrl_ws/shfiles/
+
+sh takeoff.sh
+
+sh land.sh
+```
+
+## rc mode 
+```
+1: stabale
+2: position
+3: offboard
+```
+
+## rosbag record
+```
+rosbag   record   -O  myfuel_1.bag    /uav1/mavros/imu/data     /Odom_high_freq      /Odometry /camera/color/image_raw    /camera/depth/image_rect_raw   /livox/lidar  /sdf_map/occupancy_all    /planning_vis/frontier
+```
+
